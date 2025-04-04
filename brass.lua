@@ -1,5 +1,4 @@
 -- Nome dos periféricos
-local peripheral = require("peripheral")
 local estoque = peripheral.wrap("sophisticatedstorage:controller_0")
 local melterCobre = peripheral.wrap("tconstruct:melter_0")
 local melterZinco = peripheral.wrap("tconstruct:melter_1")
