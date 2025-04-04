@@ -15,8 +15,6 @@ function enviarItem(nomeItem, quantidade, destino)
       return enviado
     end
   end
-  print("Item "..nomeItem.." não encontrado!")
-  return 0
 end
 
 -- Enviar 3 cobres para o melter 0
