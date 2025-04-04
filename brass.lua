@@ -4,6 +4,7 @@
 local estoque = peripheral.wrap("sophisticatedstorage:controller_0")
 local melterCobre = peripheral.wrap("tconstruct:melter_0")
 local melterZinco = peripheral.wrap("tconstruct:melter_1")
+local monitor = peripheral.wrap("monitor_04")
 
 -- Função para mover item por nome
 function enviarItem(nomeItem, quantidade, destino)
