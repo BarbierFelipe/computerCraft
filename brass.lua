@@ -3,7 +3,7 @@
 local estoque = peripheral.wrap("sophisticatedstorage:controller_0")
 local melterCobre = peripheral.wrap("tconstruct:melter_0")
 local melterZinco = peripheral.wrap("tconstruct:melter_1")
-local monitor = peripheral.wrap("monitor_1")  -- <- Altere aqui se o nome for diferente
+local monitor = peripheral.wrap("monitor_2")  -- <- Altere aqui se o nome for diferente
 
 if not monitor then
   print("Monitor não encontrado!")
