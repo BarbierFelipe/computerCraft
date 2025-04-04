@@ -1,25 +1,23 @@
 ---@diagnostic disable: undefined-global
 
 -- Conectar periféricos
-local estoque = peripheral.wrap("sophisticatedstorage:controller_0")
+local estoque = peripheral.wrap("bottom") -- Altere para o nome correto!
 local melterCobre = peripheral.wrap("tconstruct:melter_0")
 local melterZinco = peripheral.wrap("tconstruct:melter_1")
-local monitor = peripheral.wrap("monitor_2")  -- Altere para o nome correto
+local monitor = peripheral.wrap("monitor_3") -- Altere para o nome correto do seu monitor
 
 if not monitor then
   print("Monitor não encontrado!")
   return
 end
 
--- Pega tamanho do monitor
+-- Detectar tamanho do monitor
 local largura, altura = monitor.getSize()
-
--- Texto do botão
 local textoBotao = "[ FAZER BRASS ]"
 local botaoX = math.floor((largura - #textoBotao) / 2) + 1
 local botaoY = math.floor(altura / 2)
 
--- Função para mover item
+-- Enviar item por nome
 function enviarItem(nomeItem, quantidade, destino)
   local lista = estoque.list()
   for slot, item in pairs(lista) do
@@ -33,36 +31,39 @@ function enviarItem(nomeItem, quantidade, destino)
   return 0
 end
 
--- Função principal: fazer brass
+-- Ação do botão
 function fazerBrass()
   monitor.setCursorPos(1, altura)
-  monitor.write("Fazendo Brass...    ")
+  monitor.write("Fazendo brass...         ")
   enviarItem("minecraft:copper_ingot", 3, melterCobre)
   enviarItem("create:zinc_ingot", 1, melterZinco)
   sleep(1)
   monitor.setCursorPos(1, altura)
-  monitor.write("Brass enviado!      ")
+  monitor.write("Feito!                   ")
 end
 
--- Desenha botão
+-- Desenhar botão na tela
 function desenharBotao()
   monitor.setTextScale(1)
+  monitor.setBackgroundColor(colors.black)
+  monitor.setTextColor(colors.white)
   monitor.clear()
   monitor.setCursorPos(botaoX, botaoY)
   monitor.write(textoBotao)
 end
 
--- Loop de clique
+-- Loop de escuta de clique
 function monitorLoop()
   while true do
     local event, side, x, y = os.pullEvent("monitor_touch")
-    if side == peripheral.getName(monitor) and
-       y == botaoY and x >= botaoX and x <= botaoX + #textoBotao then
-      fazerBrass()
+    if side == peripheral.getName(monitor) then
+      if y == botaoY and x >= botaoX and x <= botaoX + #textoBotao then
+        fazerBrass()
+      end
     end
   end
 end
 
--- Inicialização
+-- Iniciar tudo
 desenharBotao()
-parallel.waitForAny(monitorLoop)
+monitorLoop()
