@@ -1,17 +1,15 @@
 ---@diagnostic disable: undefined-global
 
--- Conectar periféricos
 local estoque = peripheral.wrap("sophisticatedstorage:controller_0")
 local melterCobre = peripheral.wrap("tconstruct:melter_0")
 local melterZinco = peripheral.wrap("tconstruct:melter_1")
-local monitor = peripheral.find("monitor")
+local monitor = peripheral.wrap("monitor_1")  -- <- Altere aqui se o nome for diferente
 
 if not monitor then
   print("Monitor não encontrado!")
   return
 end
 
--- Função para mover item
 function enviarItem(nomeItem, quantidade, destino)
   local lista = estoque.list()
   for slot, item in pairs(lista) do
@@ -25,7 +23,6 @@ function enviarItem(nomeItem, quantidade, destino)
   return 0
 end
 
--- Função para iniciar a produção de brass
 function fazerBrass()
   monitor.setCursorPos(1, 7)
   monitor.write("Fazendo Brass...    ")
@@ -36,7 +33,6 @@ function fazerBrass()
   monitor.write("Brass enviado!     ")
 end
 
--- Função para desenhar o botão
 function desenharBotao()
   monitor.setTextScale(2)
   monitor.clear()
@@ -44,18 +40,14 @@ function desenharBotao()
   monitor.write("[ FAZER BRASS ]")
 end
 
--- Função para detectar clique sem travar o PC
 function monitorLoop()
   while true do
     local event, side, x, y = os.pullEvent("monitor_touch")
-    if x >= 5 and x <= 18 and y == 5 then
+    if side == peripheral.getName(monitor) and x >= 5 and x <= 18 and y == 5 then
       fazerBrass()
     end
   end
 end
 
--- Desenhar o botão
 desenharBotao()
-
--- Rodar a função de toque em paralelo
 parallel.waitForAny(monitorLoop)
