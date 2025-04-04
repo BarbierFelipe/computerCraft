@@ -1,10 +1,17 @@
--- Nome dos periféricos
+---@diagnostic disable: undefined-global
+
+-- Conectar periféricos
 local estoque = peripheral.wrap("sophisticatedstorage:controller_0")
 local melterCobre = peripheral.wrap("tconstruct:melter_0")
 local melterZinco = peripheral.wrap("tconstruct:melter_1")
-local monitor = peripheral.find("monitor")  -- Acha um monitor automaticamente
+local monitor = peripheral.find("monitor")
 
--- Função para mover item por nome
+if not monitor then
+  print("Monitor não encontrado!")
+  return
+end
+
+-- Função para mover item
 function enviarItem(nomeItem, quantidade, destino)
   local lista = estoque.list()
   for slot, item in pairs(lista) do
@@ -18,34 +25,37 @@ function enviarItem(nomeItem, quantidade, destino)
   return 0
 end
 
--- Função para fazer brass
+-- Função para iniciar a produção de brass
 function fazerBrass()
-    enviarItem("minecraft:copper_ingot", 3, melterCobre)
-    enviarItem("create:zinc_ingot", 1, melterZinco)
-    print("Produção de Brass iniciada!")
+  monitor.setCursorPos(1, 7)
+  monitor.write("Fazendo Brass...    ")
+  enviarItem("minecraft:copper_ingot", 3, melterCobre)
+  enviarItem("create:zinc_ingot", 1, melterZinco)
+  sleep(1)
+  monitor.setCursorPos(1, 7)
+  monitor.write("Brass enviado!     ")
 end
 
+-- Função para desenhar o botão
 function desenharBotao()
-    if not monitor then
-      print("Monitor não encontrado!")
-      return
-    end
-    monitor.clear()
-    monitor.setTextScale(2)
-    monitor.setCursorPos(5, 5)
-    monitor.write("[ FAZER BRASS ]")
+  monitor.setTextScale(2)
+  monitor.clear()
+  monitor.setCursorPos(5, 5)
+  monitor.write("[ FAZER BRASS ]")
 end
 
--- Detectar clique no botão
-function checarToque()
-    while true do
-      local evento, lado, x, y = os.pullEvent("monitor_touch")
-      if x >= 5 and x <= 18 and y == 5 then
-        fazerBrass()
-      end
+-- Função para detectar clique sem travar o PC
+function monitorLoop()
+  while true do
+    local event, side, x, y = os.pullEvent("monitor_touch")
+    if x >= 5 and x <= 18 and y == 5 then
+      fazerBrass()
     end
+  end
 end
 
--- Executar
+-- Desenhar o botão
 desenharBotao()
-checarToque()
+
+-- Rodar a função de toque em paralelo
+parallel.waitForAny(monitorLoop)
